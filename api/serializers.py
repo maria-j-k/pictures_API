@@ -17,4 +17,5 @@ class PictureSerializer(serializers.ModelSerializer):
         fields = ('id',  'image', 'owner')
 
     def create(self, validated_data):
-        return Picture.objects.create(**validated_data)
+        picture = Picture.objects.create(**validated_data)
+        return picture

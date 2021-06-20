@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'easy_thumbnails',
     'api',
     'users',
 ]
@@ -110,6 +111,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ]
+}
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'small': {'size': (200, 200), 'crop': True},
+        'big': {'size': (400, 400), 'crop': True},
+    },
 }
 
 # Internationalization
