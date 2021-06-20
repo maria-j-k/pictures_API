@@ -1,35 +1,28 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 from users.models import User
 
-from easy_thumbnails.fields import ThumbnailerImageField
-from easy_thumbnails.signals import saved_file
-from easy_thumbnails.signal_handlers import generate_aliases_global
-
-'''
-1. robię użytkownika - logowanie, 
-                        wylogowywanie, 
-                        lista użytkowników (permissions is supereuser)
-                        widok pojedycznego użytkownika (tylko własne konto or is superuser)
-2. pictures - na razie fulll
-3. thumbnails
-4. plany :
-        musi być osobnym modelem i modelchoicefield - admin musi móc dodawać customowe
-'''
 
 def pics_dir_path(instance, filename):
     return 'pics/user_{0}/{1}'.format(instance.owner.uuid, filename)
 
 
-def thumb_dir_path(instance, filename):
-    return 'pics/user_{0}/thumb/{1}'.format(instance.owner.uuid, filename)
-
-
 class Picture(models.Model):
     image = models.ImageField(upload_to=pics_dir_path)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    thumb = ThumbnailerImageField(upload_to=thumb_dir_path)
+    created = models.DateTimeField(auto_now_add=True)
+    expires = models.IntegerField(models.IntegerField(
+        validators=[MinValueValidator(300), MaxValueValidator(30000)]))
 
-    saved_file.connect(generate_aliases_global)
+    def __str__(self):
+        return f'{self.id}, {self.owner.email}'
 
-#class Thumb(models.Model):
-#    image = ThumbnailerImageField(upload_to=thumb_dir_path)
+
+class Thumbnail(models.Model):
+    url = models.ImageField()
+    picture = models.ForeignKey(Picture, on_delete=models.CASCADE, related_name='thumbnails')
+
+    def __str__(self):
+        return self.url.name
+

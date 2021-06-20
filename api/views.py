@@ -2,8 +2,8 @@ from rest_framework import permissions, viewsets
 from rest_framework.parsers import MultiPartParser, FormParser
 
 
-from api.models import Picture
-from api.serializers import PictureSerializer
+from api.models import Picture, Thumbnail
+from api.serializers import PictureSerializer, ThumbnailSerializer
 
 
 class PictureViewSet(viewsets.ModelViewSet):
@@ -15,10 +15,20 @@ class PictureViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_superuser:
-            return Picture.objects.all()
         return Picture.objects.filter(owner=user)
 
-    #TODO
-    # dopisać filtr po użytkowniku:w
 
+class ProfileViewSet(viewsets.ModelViewSet):
+    model = Thumbnail
+    queryset = Thumbnail.objects.all()
+    serializer_class = ThumbnailSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Thumbnail.objects.filter(picture__owner=user)
+
+
+class ThumbnailView():
+    pass

@@ -6,7 +6,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from users.models import User
+from users.models import Plan, ThumbSize, User
 
 
 class UserCreationForm(forms.ModelForm):
@@ -52,12 +52,12 @@ class UserAdmin(BaseUserAdmin):
 
     list_display = ('email',)
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password', 'plan')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email',  'password1', 'password2'),
+            'fields': ('email',  'password1', 'password2', 'plan'),
         }),
     )
     search_fields = ('email',)
@@ -65,5 +65,15 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
+class ThumbSizeAdmin(admin.ModelAdmin):
+    pass
+
+
+class PlanAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(User, UserAdmin)
 admin.site.unregister(Group)
+admin.site.register(ThumbSize, ThumbSizeAdmin)
+admin.site.register(Plan, PlanAdmin)
