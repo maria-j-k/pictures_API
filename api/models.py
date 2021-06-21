@@ -24,5 +24,5 @@ class Thumbnail(models.Model):
     picture = models.ForeignKey(Picture, on_delete=models.CASCADE, related_name='thumbnails')
 
     def __str__(self):
-        return self.image
+        return self.url
 

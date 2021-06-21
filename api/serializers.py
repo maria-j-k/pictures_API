@@ -21,7 +21,7 @@ class ThumbnailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Thumbnail
-        fields = ('url', 't_url')
+        fields = ('url', )
 
 
 class PictureSerializer(DynamicFieldsModelSerializer, serializers.ModelSerializer):
@@ -41,14 +41,14 @@ class PictureSerializer(DynamicFieldsModelSerializer, serializers.ModelSerialize
 
     def create(self, validated_data):
         picture = Picture.objects.create(**validated_data)
-        user = validated_data['owner']
-        sizes = validated_data['owner'].plan.thumbsizes.all()
+        sizes = picture.owner.plan.thumbsizes.all()
+        options = {'crop': True}
         for size in sizes:
-            url = thumbnail_url(picture.image, size.name)
+            options.update(size.dimensions)
             thumbnailer = get_thumbnailer(picture.image)
-            thumb = thumbnailer.get_thumbnail(size.dimensions)
-            t_url = thumb.url
-            t = Thumbnail.objects.create(url=url, t_url=t_url, picture=picture)
+            thumb = thumbnailer.get_thumbnail(options)
+            url = thumb.url
+            t = Thumbnail.objects.create(url=url, picture=picture)
             picture.thumbnails.add(t)
         picture.save()
         return picture
