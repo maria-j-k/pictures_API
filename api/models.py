@@ -12,7 +12,7 @@ class Picture(models.Model):
     image = models.ImageField(upload_to=pics_dir_path)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
-    expires = models.IntegerField(
+    expires = models.IntegerField(default=300,
         validators=[MinValueValidator(300), MaxValueValidator(30000)])
 
     def __str__(self):
@@ -20,9 +20,9 @@ class Picture(models.Model):
 
 
 class Thumbnail(models.Model):
-    image = models.ImageField(upload_to=pics_dir_path)
+    url = models.URLField()
     picture = models.ForeignKey(Picture, on_delete=models.CASCADE, related_name='thumbnails')
 
     def __str__(self):
-        return self.image.name
+        return self.image
 

@@ -9,7 +9,6 @@ from api.models import Picture, Thumbnail
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
-        # Instantiate the superclass normally
         super(DynamicFieldsModelSerializer, self).__init__(*args, **kwargs)
 
         user = self.context['request'].user
@@ -18,17 +17,12 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 
 
 class ThumbnailSerializer(serializers.ModelSerializer):
-#    url = serializers.URLField()
-    image = serializers.ImageField(
-            max_length=200,
-            allow_empty_file=False, 
-            use_url=True,
-            )
+    url = serializers.URLField()
 
     class Meta:
         model = Thumbnail
-#        fields = ('url', 't_url')
-        fields = ('image', )
+        fields = ('url', 't_url')
+
 
 class PictureSerializer(DynamicFieldsModelSerializer, serializers.ModelSerializer):
     image = serializers.ImageField(
@@ -47,14 +41,14 @@ class PictureSerializer(DynamicFieldsModelSerializer, serializers.ModelSerialize
 
     def create(self, validated_data):
         picture = Picture.objects.create(**validated_data)
-        thumbnailer = get_thumbnailer(picture.image)
         user = validated_data['owner']
         sizes = validated_data['owner'].plan.thumbsizes.all()
         for size in sizes:
             url = thumbnail_url(picture.image, size.name)
+            thumbnailer = get_thumbnailer(picture.image)
             thumb = thumbnailer.get_thumbnail(size.dimensions)
             t_url = thumb.url
-            t = Thumbnail.objects.create(image=thumb, picture=picture)
+            t = Thumbnail.objects.create(url=url, t_url=t_url, picture=picture)
             picture.thumbnails.add(t)
         picture.save()
         return picture
