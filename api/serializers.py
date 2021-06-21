@@ -11,10 +11,6 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super(DynamicFieldsModelSerializer, self).__init__(*args, **kwargs)
-        request = self.context['request']
-        print(request.path)
-        host = request.get_host()
-        print(host)
         user = self.context['request'].user
         if user.plan.original:
             setattr(self.fields['image'], 'use_url', True)
