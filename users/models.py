@@ -31,7 +31,7 @@ class ThumbSize(models.Model):
 class Plan(models.Model):
     name = models.CharField(max_length=100)
     original = models.BooleanField()
-    exipring_links = models.BooleanField()
+    expiring_links = models.BooleanField()
     thumbsizes = models.ManyToManyField(ThumbSize)
 
     def __str__(self):
