@@ -21,7 +21,9 @@ class Picture(models.Model):
 
 class Thumbnail(models.Model):
     url = models.URLField()
-    picture = models.ForeignKey(Picture, on_delete=models.CASCADE, related_name='thumbnails')
+    picture = models.ForeignKey(Picture, 
+            on_delete=models.CASCADE, 
+            related_name='thumbnails')
 
     def __str__(self):
         return self.url

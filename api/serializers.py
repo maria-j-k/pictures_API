@@ -1,6 +1,7 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework import serializers
 from easy_thumbnails.files import get_thumbnailer
-from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 
 from api.models import Picture, Thumbnail
 
@@ -10,7 +11,10 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super(DynamicFieldsModelSerializer, self).__init__(*args, **kwargs)
-
+        request = self.context['request']
+        print(request.path)
+        host = request.get_host()
+        print(host)
         user = self.context['request'].user
         if user.plan.original:
             setattr(self.fields['image'], 'use_url', True)
@@ -40,6 +44,7 @@ class PictureSerializer(DynamicFieldsModelSerializer, serializers.ModelSerialize
         fields = ('id',  'image', 'owner', 'thumbnails', 'expires')
 
     def create(self, validated_data):
+        request = self.context.get('request')
         picture = Picture.objects.create(**validated_data)
         sizes = picture.owner.plan.thumbsizes.all()
         options = {'crop': True}
@@ -47,10 +52,7 @@ class PictureSerializer(DynamicFieldsModelSerializer, serializers.ModelSerialize
             options.update(size.dimensions)
             thumbnailer = get_thumbnailer(picture.image)
             thumb = thumbnailer.get_thumbnail(options)
-            url = thumb.url
+            url = request.build_absolute_uri(thumb.url)
             t = Thumbnail.objects.create(url=url, picture=picture)
-            picture.thumbnails.add(t)
-        picture.save()
         return picture
-
 

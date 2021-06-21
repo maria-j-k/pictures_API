@@ -21,5 +21,3 @@ login przekierowuje na /users/
 '''
 
 
-admin = '93ff9c3b-a618-4cb2-b445-0128085e48ab'
-maria = '53c1ae73-2502-4a70-878d-601d168a42b4'
