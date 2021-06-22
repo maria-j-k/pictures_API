@@ -1,12 +1,14 @@
-from rest_framework import permissions, viewsets
+from django.http import FileResponse
+from rest_framework import generics, permissions, views, viewsets, renderers
 from rest_framework.parsers import MultiPartParser, FormParser
-
+from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from api.models import Picture, Thumbnail
 from api.serializers import PictureSerializer, ThumbnailSerializer
 
 
-class PictureViewSet(viewsets.ModelViewSet):
+class PictureView(generics.ListCreateAPIView):
     model = Picture
     queryset = Picture.objects.all()
     serializer_class = PictureSerializer

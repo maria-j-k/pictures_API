@@ -23,10 +23,13 @@ class Picture(models.Model):
     
     
     @property
-    def valid(self):
-        limit =  self.created + datetime.timedelta(
+    def expires(self):
+        return  self.created + datetime.timedelta(
                 seconds=self.duration)
-        return limit >= timezone.now()
+
+    @property
+    def valid(self):
+        return self.expires >= timezone.now()
 
 
 class Thumbnail(models.Model):
