@@ -123,6 +123,7 @@ THUMBNAIL_ALIASES = {
         'big': {'size': (400, 400), 'crop': True},
     },
 }
+THUMBNAIL_NAMER = 'easy_thumbnails.namers.source_hashed'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

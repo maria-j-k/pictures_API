@@ -31,6 +31,10 @@ class Picture(models.Model):
     def valid(self):
         return self.expires >= timezone.now()
 
+    @property
+    def short_name(self):
+        return self.image.name.split('/')[-1]
+
 
 class Thumbnail(models.Model):
     url = models.URLField()
