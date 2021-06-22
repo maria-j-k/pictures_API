@@ -13,7 +13,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', u_views.UserList.as_view()),
     path('users/<str:pk>/', u_views.UserDetail.as_view(), name='user_details'),
-    path('pictures/', a_views.PictureView.as_view()),
+    path('pictures/upload/', a_views.PictureCreateView.as_view()),
+    path('pictures/', a_views.PictureListView.as_view()),
+    path('pictures/<int:pic_pk>/<int:size_pk>/', a_views.ThumbnailView.as_view()),
     path('auth/', include('rest_framework.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
