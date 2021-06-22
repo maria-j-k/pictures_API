@@ -1,5 +1,8 @@
+import datetime
+
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
 
 from users.models import User
 
@@ -12,11 +15,18 @@ class Picture(models.Model):
     image = models.ImageField(upload_to=pics_dir_path)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
-    expires = models.IntegerField(default=300,
+    duration = models.IntegerField(default=300,
         validators=[MinValueValidator(300), MaxValueValidator(30000)])
 
     def __str__(self):
         return f'{self.id}, {self.owner.email}'
+    
+    
+    @property
+    def valid(self):
+        limit =  self.created + datetime.timedelta(
+                seconds=self.duration)
+        return limit >= timezone.now()
 
 
 class Thumbnail(models.Model):

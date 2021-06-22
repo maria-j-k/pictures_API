@@ -37,7 +37,7 @@ class PictureSerializer(DynamicFieldsModelSerializer, serializers.ModelSerialize
 
     class Meta:
         model = Picture
-        fields = ('id',  'image', 'owner', 'thumbnails', 'expires')
+        fields = ('id',  'image', 'owner', 'thumbnails', 'duration')
 
     def create(self, validated_data):
         request = self.context.get('request')
