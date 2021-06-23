@@ -42,16 +42,9 @@ class ThumbnailView(generics.CreateAPIView):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        print(f'get context: {context}')
         picture = Picture.objects.get(pk=self.kwargs['pic_pk'])
         size = ThumbSize.objects.get(pk=self.kwargs['size_pk'])
         context['size'] = size
         context['picture'] = picture
-        print(f'After changes: get context: {context}')
         return context
 
-#    def perform_create(self, serializer):
-#        picture = Picture.objects.get(pk=self.kwargs['pic_pk'])
-#        size = ThumbSize.objects.get(pk=self.kwargs['size_pk'])
-#        print(f'size is {size.name}, {size.size}')
-#        serializer.save(picture=picture, size=size)

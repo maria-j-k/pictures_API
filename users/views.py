@@ -14,10 +14,5 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = [custom.IsThemself | permissions.IsAdminUser]
 
-'''
-login przekierowuje na /users/
-    powinien na users/<user_id>/
-    dać do UserList jako action?
-'''
 
 
