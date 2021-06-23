@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'easy_thumbnails',
+    'django_crontab',
     'api',
     'users',
 ]
@@ -89,7 +90,9 @@ DATABASES = {
     }
 }
 
-
+CRONJOBS = [
+    ('*/1 * * * *', 'django.core.management.call_command', ['expired_links'])
+]
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
