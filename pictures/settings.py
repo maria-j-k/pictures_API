@@ -25,13 +25,18 @@ MEDIA_URL = '/media/'
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-m98_src&o^jg6u_!%!6rp!q)_+g0_dq_xzvaheehu3#^x$9#d_'
+try:
+    from pictures.local_settings import SECRET_KEY 
+except ModuleNotFoundError:
+    print('You must configure your secret key in the local_settings.py')
+    SECRET_KEY = None
 
+SECRET_KEY = os.environ.get('SECRET_KEY', SECRET_KEY)  
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+CORS_ORIGIN_ALLOW_ALL = True 
 
 # Application definition
 
@@ -83,12 +88,17 @@ WSGI_APPLICATION = 'pictures.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+try:
+    from pictures.local_settings import DATABASES
+
+except (ModuleNotFoundError, ImportError):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+
 
 CRONJOBS = [
     ('*/1 * * * *', 'django.core.management.call_command', ['expired_links'])
